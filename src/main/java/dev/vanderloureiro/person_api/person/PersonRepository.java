@@ -1,5 +1,6 @@
 package dev.vanderloureiro.person_api.person;
 
+import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ class PersonRepository {
     // uso de fail first
     public Person findById(Long id) {
         if (!database.containsKey(id)) {
-            throw new RuntimeException();
+            throw new PersonNotFoundException();
         }
         return database.get(id);
     }
