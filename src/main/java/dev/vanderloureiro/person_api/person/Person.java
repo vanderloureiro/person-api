@@ -3,6 +3,9 @@ package dev.vanderloureiro.person_api.person;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/*
+* Pela descrição falar apenas de Java e Spring. Ignorei o uso de Lombok ou demais dependências
+* */
 public class Person {
 
     private Long id;
