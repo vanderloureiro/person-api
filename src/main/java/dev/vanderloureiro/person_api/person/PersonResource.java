@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +29,11 @@ public class PersonResource {
 
     @GetMapping
     public ResponseEntity<List<Person>> get() {
-        return ResponseEntity.ok(this.repository.findAll());
+        List<Person> list = this.repository
+                .findAll().stream()
+                .sorted(Comparator.comparing(Person::getName))
+                .toList();
+        return ResponseEntity.ok(list);
     }
 
     @PostMapping
