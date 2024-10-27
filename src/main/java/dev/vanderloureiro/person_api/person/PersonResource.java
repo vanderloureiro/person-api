@@ -62,10 +62,8 @@ public class PersonResource {
 
     @PatchMapping("/{id}")
     public ResponseEntity<Person> update(@PathVariable Long id, @RequestBody Person request) {
-        if (!repository.exists(id)) {
-            throw new PersonNotFoundException();
-        }
-        Person updatable = repository.findById(id);
+
+        Person updatable = repository.findById(id).orElseThrow(PersonNotFoundException::new);
         updatable.patch(request);
         repository.save(updatable);
         return ResponseEntity.noContent().build();
@@ -73,10 +71,9 @@ public class PersonResource {
 
     @GetMapping("/{id}")
     public ResponseEntity<Person> getById(@PathVariable Long id) {
-        if (!repository.exists(id)) {
-            throw new PersonNotFoundException();
-        }
-        return ResponseEntity.ok(repository.findById(id));
+
+        Person person = repository.findById(id).orElseThrow(PersonNotFoundException::new);
+        return ResponseEntity.ok(person);
     }
 
     @DeleteMapping("/{id}")
@@ -89,24 +86,16 @@ public class PersonResource {
     }
 
     @GetMapping("/{id}/age")
-    public ResponseEntity<Long> age(
-            @PathVariable Long id,
-            @RequestParam String output) {
-        if (!repository.exists(id)) {
-            throw new PersonNotFoundException();
-        }
-        Person person = repository.findById(id);
+    public ResponseEntity<Long> age(@PathVariable Long id, @RequestParam String output) {
+
+        Person person = repository.findById(id).orElseThrow(PersonNotFoundException::new);
         return ResponseEntity.ok(person.getAge(output));
     }
 
     @GetMapping("/{id}/salary")
-    public ResponseEntity<BigDecimal> salary(
-            @PathVariable Long id,
-            @RequestParam String output) {
-        if (!repository.exists(id)) {
-            throw new PersonNotFoundException();
-        }
-        Person person = repository.findById(id);
+    public ResponseEntity<BigDecimal> salary(@PathVariable Long id, @RequestParam String output) {
+
+        Person person = repository.findById(id).orElseThrow(PersonNotFoundException::new);
         return ResponseEntity.ok(person.getSalary(output));
     }
 }

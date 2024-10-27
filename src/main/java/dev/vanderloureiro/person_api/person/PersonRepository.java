@@ -7,10 +7,10 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /*
-* Repository com visibildiade package para ser acessado apenas dentro do modulo de person,
-* Demais operações na base devem ser pelos serviços
+* Repository com visibildiade package para ser acessado apenas dentro do modulo de person
 * */
 @Repository
 class PersonRepository {
@@ -39,9 +39,8 @@ class PersonRepository {
         return this.database.values().stream().toList();
     }
 
-    // uso de fail first
-    public Person findById(Long id) {
-        return database.get(id);
+    public Optional<Person> findById(Long id) {
+        return Optional.ofNullable(database.get(id));
     }
 
     public boolean exists(Long id) {
