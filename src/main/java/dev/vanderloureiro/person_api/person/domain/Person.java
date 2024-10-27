@@ -1,4 +1,4 @@
-package dev.vanderloureiro.person_api.person;
+package dev.vanderloureiro.person_api.person.domain;
 
 import java.time.LocalDate;
 import java.util.Objects;
