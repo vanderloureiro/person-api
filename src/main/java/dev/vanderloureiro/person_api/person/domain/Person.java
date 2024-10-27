@@ -1,6 +1,12 @@
 package dev.vanderloureiro.person_api.person.domain;
 
+import dev.vanderloureiro.person_api.person.exception.BadFormatException;
+import org.apache.commons.lang3.StringUtils;
+
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Objects;
 
 /*
@@ -32,24 +38,12 @@ public class Person {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public LocalDate getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
-
     public LocalDate getAdmissionDate() {
         return admissionDate;
-    }
-
-    public void setAdmissionDate(LocalDate admissionDate) {
-        this.admissionDate = admissionDate;
     }
 
     @Override
@@ -66,5 +60,38 @@ public class Person {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, birthDate, admissionDate);
+    }
+
+    public void patch(Person newPerson) {
+        if (Objects.nonNull(newPerson.getName()) && StringUtils.isNotEmpty(newPerson.getName())) {
+            this.name = newPerson.name;
+        }
+        if (Objects.nonNull(newPerson.getBirthDate())) {
+            this.birthDate = newPerson.birthDate;
+        }
+        if (Objects.nonNull(newPerson.getAdmissionDate())) {
+            admissionDate = newPerson.admissionDate;
+        }
+    }
+
+    public long getAge(String format) {
+        if (!List.of("days", "months", "years").contains(format.toLowerCase())) {
+            throw new BadFormatException();
+        }
+        if (format.equalsIgnoreCase("days")) {
+            return ChronoUnit.DAYS.between(this.birthDate, LocalDate.now());
+        }
+        if (format.equalsIgnoreCase("months")) {
+            return ChronoUnit.MONTHS.between(this.birthDate, LocalDate.now());
+        }
+        return ChronoUnit.YEARS.between(this.birthDate, LocalDate.now());
+    }
+
+    public BigDecimal getSalary(String format) {
+        if (!List.of("min", "full").contains(format.toLowerCase())) {
+            throw new BadFormatException();
+        }
+        // todo
+        return BigDecimal.ZERO;
     }
 }

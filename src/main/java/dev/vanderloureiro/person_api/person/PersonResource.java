@@ -1,10 +1,8 @@
 package dev.vanderloureiro.person_api.person;
 
 import dev.vanderloureiro.person_api.person.domain.Person;
-import dev.vanderloureiro.person_api.person.exception.BadRequestException;
 import dev.vanderloureiro.person_api.person.exception.IdAlreadyExistsException;
 import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.net.URI;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -69,15 +66,7 @@ public class PersonResource {
             throw new PersonNotFoundException();
         }
         Person updatable = repository.findById(id);
-        if (Objects.nonNull(request.getName()) && StringUtils.isNotEmpty(request.getName())) {
-            updatable.setName(request.getName());
-        }
-        if (Objects.nonNull(request.getBirthDate())) {
-            updatable.setBirthDate(request.getBirthDate());
-        }
-        if (Objects.nonNull(request.getAdmissionDate())) {
-            updatable.setAdmissionDate(request.getAdmissionDate());
-        }
+        updatable.patch(request);
         repository.save(updatable);
         return ResponseEntity.noContent().build();
     }
@@ -106,19 +95,18 @@ public class PersonResource {
         if (!repository.exists(id)) {
             throw new PersonNotFoundException();
         }
-        if (!List.of("days", "months", "years").contains(output.toLowerCase())) {
-            throw new BadRequestException();
+        Person person = repository.findById(id);
+        return ResponseEntity.ok(person.getAge(output));
+    }
+
+    @GetMapping("/{id}/salary")
+    public ResponseEntity<BigDecimal> salary(
+            @PathVariable Long id,
+            @RequestParam String output) {
+        if (!repository.exists(id)) {
+            throw new PersonNotFoundException();
         }
         Person person = repository.findById(id);
-        if (output.equalsIgnoreCase("days")) {
-            long difference = ChronoUnit.DAYS.between(person.getBirthDate(), LocalDate.now());
-            return ResponseEntity.ok(difference);
-        }
-        if (output.equalsIgnoreCase("months")) {
-            long difference = ChronoUnit.MONTHS.between(person.getBirthDate(), LocalDate.now());
-            return ResponseEntity.ok(difference);
-        }
-        long difference = ChronoUnit.YEARS.between(person.getBirthDate(), LocalDate.now());
-        return ResponseEntity.ok(difference);
+        return ResponseEntity.ok(person.getSalary(output));
     }
 }

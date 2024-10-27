@@ -1,6 +1,6 @@
 package dev.vanderloureiro.person_api.config;
 
-import dev.vanderloureiro.person_api.person.exception.BadRequestException;
+import dev.vanderloureiro.person_api.person.exception.BadFormatException;
 import dev.vanderloureiro.person_api.person.exception.IdAlreadyExistsException;
 import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class ApplicationExceptionHandler {
         return response;
     }
 
-    @ExceptionHandler(BadRequestException.class)
+    @ExceptionHandler(BadFormatException.class)
     public ProblemDetail handleBadRequestException(RuntimeException e) {
         var response = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         response.setTitle("Requisição mal formatada");
