@@ -1,6 +1,7 @@
 package dev.vanderloureiro.person_api.person;
 
 import dev.vanderloureiro.person_api.person.domain.Person;
+import dev.vanderloureiro.person_api.person.domain.Salary;
 import dev.vanderloureiro.person_api.person.exception.IdAlreadyExistsException;
 import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
 import org.springframework.http.ResponseEntity;
@@ -33,10 +34,8 @@ public class PersonResource {
 
     @GetMapping
     public ResponseEntity<List<Person>> get() {
-        List<Person> list = this.repository
-                .findAll().stream()
-                .sorted(Comparator.comparing(Person::getName))
-                .toList();
+        List<Person> list = this.repository.findAll().stream()
+                .sorted(Comparator.comparing(Person::getName)).toList();
         return ResponseEntity.ok(list);
     }
 
@@ -96,6 +95,6 @@ public class PersonResource {
     public ResponseEntity<BigDecimal> salary(@PathVariable Long id, @RequestParam String output) {
 
         Person person = repository.findById(id).orElseThrow(PersonNotFoundException::new);
-        return ResponseEntity.ok(person.getSalary(output));
+        return ResponseEntity.ok(Salary.of(person, output));
     }
 }

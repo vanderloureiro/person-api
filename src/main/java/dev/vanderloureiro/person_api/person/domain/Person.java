@@ -4,6 +4,7 @@ import dev.vanderloureiro.person_api.person.exception.BadFormatException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -87,11 +88,4 @@ public class Person {
         return ChronoUnit.YEARS.between(this.birthDate, LocalDate.now());
     }
 
-    public BigDecimal getSalary(String format) {
-        if (!List.of("min", "full").contains(format.toLowerCase())) {
-            throw new BadFormatException();
-        }
-        // todo
-        return BigDecimal.ZERO;
-    }
 }
