@@ -1,5 +1,6 @@
 package dev.vanderloureiro.person_api.config;
 
+import dev.vanderloureiro.person_api.person.exception.BadRequestException;
 import dev.vanderloureiro.person_api.person.exception.IdAlreadyExistsException;
 import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,13 @@ public class ApplicationExceptionHandler {
     public ProblemDetail handleIdAlreadyExistsException(RuntimeException e) {
         var response = ProblemDetail.forStatus(HttpStatus.CONFLICT);
         response.setTitle("PersonId Already Exists");
+        return response;
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ProblemDetail handleBadRequestException(RuntimeException e) {
+        var response = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        response.setTitle("Requisição mal formatada");
         return response;
     }
 }
