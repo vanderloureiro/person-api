@@ -1,5 +1,6 @@
 package dev.vanderloureiro.person_api.config;
 
+import dev.vanderloureiro.person_api.person.exception.IdAlreadyExistsException;
 import dev.vanderloureiro.person_api.person.exception.PersonNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -10,9 +11,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ApplicationExceptionHandler {
 
     @ExceptionHandler(PersonNotFoundException.class)
-    public ProblemDetail handlePersonNotFoundException(PersonNotFoundException e) {
+    public ProblemDetail handlePersonNotFoundException(RuntimeException e) {
         var response = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
         response.setTitle("Person Not Found");
+        return response;
+    }
+
+    @ExceptionHandler(IdAlreadyExistsException.class)
+    public ProblemDetail handleIdAlreadyExistsException(RuntimeException e) {
+        var response = ProblemDetail.forStatus(HttpStatus.CONFLICT);
+        response.setTitle("PersonId Already Exists");
         return response;
     }
 }
