@@ -60,12 +60,11 @@ public class PersonResource {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Person> update(@PathVariable Long id, @RequestBody Person request) {
+    public ResponseEntity<Person> update(@RequestBody Person request, @PathVariable Long id) {
 
         Person updatable = repository.findById(id).orElseThrow(PersonNotFoundException::new);
         updatable.patch(request);
-        repository.save(updatable);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(repository.save(updatable));
     }
 
     @GetMapping("/{id}")

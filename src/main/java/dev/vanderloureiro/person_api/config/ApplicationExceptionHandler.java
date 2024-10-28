@@ -14,14 +14,14 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(PersonNotFoundException.class)
     public ProblemDetail handlePersonNotFoundException(RuntimeException e) {
         var response = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
-        response.setTitle("Person Not Found");
+        response.setTitle("Recurso não encontrado");
         return response;
     }
 
     @ExceptionHandler(IdAlreadyExistsException.class)
     public ProblemDetail handleIdAlreadyExistsException(RuntimeException e) {
         var response = ProblemDetail.forStatus(HttpStatus.CONFLICT);
-        response.setTitle("PersonId Already Exists");
+        response.setTitle("ID já existente");
         return response;
     }
 
